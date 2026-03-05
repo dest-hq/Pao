@@ -1,2 +1,2 @@
 # Pao
-A GPU based renderer
+Fast GPU-accelerated 2D renderer built on top of wgpu

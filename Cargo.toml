@@ -1,9 +1,17 @@
 [package]
 name = "pao"
 version = "0.1.0"
-description = "Fast GPU-accelerated 2D renderer built on wgpu"
+description = "Fast GPU-accelerated 2D renderer built on top of wgpu"
 license = "MIT"
 edition = "2024"
+
+[workspace]
+members = [
+    "examples/*"
+]
+
+[workspace.dependencies]
+pao = { version = "0.1.0", path = "." }
 
 [dependencies]
 primit = { git = "https://github.com/dest-hq/primit" }

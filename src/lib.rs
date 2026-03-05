@@ -1,7 +1,7 @@
-mod color;
-mod context;
-mod scene;
-mod shapes;
+mod canvas;
+mod commands;
+
+pub use canvas::*;
 
 // Re export
 pub use primit;
