@@ -90,7 +90,7 @@ cargo run --release -p <the example>
 ### v0.2.0 - Essential Shapes (Next)
 - [ ] Rounded rectangles
 - [ ] Lines and strokes
-- [ ] Text rendering (glyphon integration)
+- [ ] Text rendering
 - [ ] Gradients
 
 ### v0.3.0 - Advanced (Future)
