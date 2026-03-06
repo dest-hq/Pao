@@ -413,15 +413,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "features"
-version = "0.1.0"
-dependencies = [
- "pao",
- "pollster",
- "winit",
-]
-
-[[package]]
 name = "find-msvc-tools"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1666,6 +1657,15 @@ name = "tracing-core"
 version = "0.1.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db97caf9d906fbde555dd62fa95ddba9eecfd14cb388e4f491a66d74cd5fb79a"
+
+[[package]]
+name = "triangle"
+version = "0.1.0"
+dependencies = [
+ "pao",
+ "pollster",
+ "winit",
+]
 
 [[package]]
 name = "ttf-parser"
