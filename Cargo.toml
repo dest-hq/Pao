@@ -7,7 +7,7 @@ edition = "2024"
 
 [workspace]
 members = [
-    "examples/*"
+    "examples/*",
 ]
 
 [workspace.dependencies]

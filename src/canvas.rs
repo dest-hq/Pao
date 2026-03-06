@@ -1,5 +1,3 @@
-// Wgpu setup
-
 use primit::{Circle, Color, Rect, RoundedRect};
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use wgpu::{
@@ -7,7 +5,7 @@ use wgpu::{
     PowerPreference, PresentMode, Queue, Surface, SurfaceConfiguration, TextureUsages,
 };
 
-use crate::commands::Commands;
+use crate::{commands::Commands, features::RenderFeature};
 
 // Options
 #[derive(Default)]
@@ -20,19 +18,20 @@ pub struct Options {
     pub mode: PresentMode,
 }
 
-pub struct Canvas<'a> {
+pub struct Canvas {
     device: Device,
     queue: Queue,
-    surface: Surface<'a>,
+    surface: Surface<'static>,
     config: SurfaceConfiguration,
-    texture: Option<wgpu::SurfaceTexture>,
+
     commands: Vec<Commands>,
+    features: Vec<Box<dyn RenderFeature>>,
 }
 
-impl<'a> Canvas<'a> {
+impl Canvas {
     pub async fn new<T>(window: T, options: Options) -> Result<Self, String>
     where
-        T: HasWindowHandle + HasDisplayHandle + Send + Sync + 'a,
+        T: HasWindowHandle + HasDisplayHandle + Send + Sync + 'static,
     {
         // Create instance
         let instance = Instance::new(&InstanceDescriptor {
@@ -75,8 +74,8 @@ impl<'a> Canvas<'a> {
             width: options.width.max(1),
             height: options.height.max(1),
             present_mode: options.mode,
-            alpha_mode: CompositeAlphaMode::Auto,
-            view_formats: vec![format.add_srgb_suffix()],
+            alpha_mode: CompositeAlphaMode::Opaque,
+            view_formats: vec![],
             desired_maximum_frame_latency: 2,
         };
 
@@ -87,22 +86,34 @@ impl<'a> Canvas<'a> {
             queue,
             surface,
             commands: Vec::new(),
-            texture: None,
             config,
+            features: Vec::new(),
         })
     }
 
-    pub fn fill_rect(&mut self, rect: Rect) {
+    pub fn draw_rect(&mut self, rect: Rect) {
         self.commands.push(Commands::RectCommand(rect));
     }
 
-    pub fn fill_rounded_rect(&mut self, rounded_rect: RoundedRect) {
+    pub fn draw_rounded_rect(&mut self, rounded_rect: RoundedRect) {
         self.commands
             .push(Commands::RoundedRectCommand(rounded_rect));
     }
 
-    pub fn fill_circle(&mut self, circle: Circle) {
+    pub fn draw_circle(&mut self, circle: Circle) {
         self.commands.push(Commands::CircleCommand(circle));
+    }
+
+    pub fn get_device(&self) -> &Device {
+        &self.device
+    }
+
+    pub fn get_surface_config(&self) -> &SurfaceConfiguration {
+        &self.config
+    }
+
+    pub fn get_queue(&self) -> &Queue {
+        &self.queue
     }
 
     pub fn resize(&mut self, width: u32, height: u32) {
@@ -112,25 +123,23 @@ impl<'a> Canvas<'a> {
         self.surface.configure(&self.device, &self.config);
     }
 
-    /// Prepare texture
-    pub fn prepare(&mut self, background: Color) {
-        if self.texture.is_some() {
-            self.present();
-        }
+    pub fn add_feature(&mut self, feature: Box<dyn RenderFeature>) {
+        self.features.push(feature);
+    }
 
+    pub fn render(&mut self, background: Color) {
         // Create texture view
         let surface_texture = self.surface.get_current_texture().unwrap();
-        let texture_view = surface_texture
-            .texture
-            .create_view(&wgpu::TextureViewDescriptor {
-                format: Some(self.config.format.add_srgb_suffix()),
-                ..Default::default()
-            });
+        let texture_view = surface_texture.texture.create_view(&Default::default());
 
         let mut encoder = self.device.create_command_encoder(&Default::default());
 
+        for feature in &mut self.features {
+            feature.prepare(&mut self.device, &mut self.queue);
+        }
+
         // Create the renderpass which will clear the screen.
-        let renderpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+        let mut renderpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: None,
             color_attachments: &[Some(wgpu::RenderPassColorAttachment {
                 view: &texture_view,
@@ -141,7 +150,7 @@ impl<'a> Canvas<'a> {
                         r: background.r as f64 / 255.0,
                         g: background.g as f64 / 255.0,
                         b: background.b as f64 / 255.0,
-                        a: background.a as f64 / 255.0,
+                        a: background.a as f64 / 100.0,
                     }),
                     store: wgpu::StoreOp::Store,
                 },
@@ -152,21 +161,16 @@ impl<'a> Canvas<'a> {
             multiview_mask: None,
         });
 
-        // TODO: Draw commands
+        for feature in &mut self.features {
+            feature.render(&mut renderpass);
+        }
 
         // End the renderpass.
         drop(renderpass);
 
         // Submit the command in the queue to execute
         self.queue.submit([encoder.finish()]);
-        self.texture = Some(surface_texture);
+        surface_texture.present();
         self.commands.clear();
-    }
-
-    /// Display texture
-    pub fn present(&mut self) {
-        if let Some(texture) = self.texture.take() {
-            texture.present();
-        }
     }
 }

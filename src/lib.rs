@@ -1,5 +1,6 @@
 mod canvas;
 mod commands;
+pub mod features;
 
 pub use canvas::*;
 
