@@ -121,7 +121,7 @@ Benchmarks coming in v0.1.0
 
 ## Contributing
 
-Contributions welcome! Check out [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Check out [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 Areas where help is needed:
 - Shape rendering implementations
