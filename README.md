@@ -41,15 +41,15 @@ The best thing about Pao is its **expandability**. Instead of providing everythi
 use pao::features::RenderFeature;
 
 pub struct TriangleFeature {
-    pipeline: wgpu::RenderPipeline,
+    pipeline: pao::wgpu::RenderPipeline,
 }
 
 impl RenderFeature for TriangleFeature {
-    fn prepare(&mut self, device: &wgpu::Device, queue: &wgpu::Queue) {
+    fn prepare(&mut self, device: &pao::wgpu::Device, queue: &pao::wgpu::Queue) {
     
     }
     
-    fn render(&mut self, pass: &mut wgpu::RenderPass) {
+    fn render(&mut self, pass: &mut pao::wgpu::RenderPass) {
         pass.set_pipeline(&self.pipeline);
         pass.draw(0..3, 0..1);
     }
