@@ -14,20 +14,18 @@ fn main() {
     event_loop.run_app(&mut App::default()).unwrap();
 }
 
-struct State<'a> {
+struct State {
     window: Arc<Window>,
-    size: winit::dpi::PhysicalSize<u32>,
-    canvas: Canvas<'a>,
+    canvas: Canvas,
 }
 
-impl<'a> State<'a> {
-    async fn new(window: Arc<Window>) -> State<'a> {
+impl State {
+    async fn new(window: Arc<Window>) -> State {
         let size = window.inner_size();
         State {
             window: window.clone(),
-            size: size,
             canvas: Canvas::new(
-                window.clone(),
+                window,
                 Options {
                     width: size.width,
                     height: size.height,
@@ -43,25 +41,21 @@ impl<'a> State<'a> {
     }
 
     fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {
-        self.size = new_size;
-
-        // reconfigure the surface
-        self.canvas.resize(self.size.width, self.size.height);
+        self.canvas.resize(new_size.width, new_size.height);
     }
 
     fn render(&mut self) {
-        self.canvas.prepare(Color::rgb8(0, 255, 0));
         self.window.pre_present_notify();
-        self.canvas.present();
+        self.canvas.render(Color::rgb8(0, 255, 0));
     }
 }
 
 #[derive(Default)]
-struct App<'a> {
-    state: Option<State<'a>>,
+struct App {
+    state: Option<State>,
 }
 
-impl<'a> ApplicationHandler for App<'a> {
+impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         // Create window object
         let window = Arc::new(
