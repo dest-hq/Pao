@@ -8,6 +8,7 @@ use winit::{
     window::{Window, WindowId},
 };
 
+#[derive(Clone)]
 pub struct TriangleFeature {
     pipeline: pao::wgpu::RenderPipeline,
 }
@@ -75,6 +76,7 @@ fn main() {
 
 struct State {
     window: Arc<Window>,
+    triangle_feature: Box<TriangleFeature>,
     canvas: Canvas,
 }
 
@@ -82,7 +84,7 @@ impl State {
     async fn new(window: Arc<Window>) -> State {
         let size = window.inner_size();
 
-        let mut canvas = Canvas::new(
+        let canvas = Canvas::new(
             window.clone(),
             Options {
                 width: size.width,
@@ -96,13 +98,12 @@ impl State {
         .await
         .unwrap();
 
-        canvas.add_feature(Box::new(TriangleFeature::new(
-            canvas.get_device(),
-            &canvas.get_surface_config(),
-        )));
-
         State {
             window: window,
+            triangle_feature: Box::new(TriangleFeature::new(
+                canvas.get_device(),
+                &canvas.get_surface_config(),
+            )),
             canvas,
         }
     }
@@ -113,6 +114,7 @@ impl State {
 
     fn render(&mut self) {
         self.window.pre_present_notify();
+        self.canvas.draw_feature(self.triangle_feature.clone());
         self.canvas.render(Color::rgb8(0, 255, 0));
     }
 }

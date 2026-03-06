@@ -25,7 +25,6 @@ pub struct Canvas {
     config: SurfaceConfiguration,
 
     commands: Vec<Commands>,
-    features: Vec<Box<dyn RenderFeature>>,
 }
 
 impl Canvas {
@@ -87,7 +86,6 @@ impl Canvas {
             surface,
             commands: Vec::new(),
             config,
-            features: Vec::new(),
         })
     }
 
@@ -123,8 +121,8 @@ impl Canvas {
         self.surface.configure(&self.device, &self.config);
     }
 
-    pub fn add_feature(&mut self, feature: Box<dyn RenderFeature>) {
-        self.features.push(feature);
+    pub fn draw_feature(&mut self, feature: Box<dyn RenderFeature>) {
+        self.commands.push(Commands::FeatureCommand(feature));
     }
 
     pub fn render(&mut self, background: Color) {
@@ -133,10 +131,6 @@ impl Canvas {
         let texture_view = surface_texture.texture.create_view(&Default::default());
 
         let mut encoder = self.device.create_command_encoder(&Default::default());
-
-        for feature in &mut self.features {
-            feature.prepare(&mut self.device, &mut self.queue);
-        }
 
         // Create the renderpass which will clear the screen.
         let mut renderpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -161,8 +155,14 @@ impl Canvas {
             multiview_mask: None,
         });
 
-        for feature in &mut self.features {
-            feature.render(&mut renderpass);
+        for cmd in &mut self.commands {
+            match cmd {
+                Commands::FeatureCommand(feature) => {
+                    feature.prepare(&self.device, &self.queue);
+                    feature.render(&mut renderpass);
+                }
+                _ => {}
+            }
         }
 
         // End the renderpass.
