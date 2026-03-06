@@ -56,13 +56,10 @@ impl RenderFeature for TriangleFeature {
 }
 
 // Use it:
-canvas.add_feature(Box::new(TriangleFeature::new(
+canvas.draw_feature(Box::new(TriangleFeature::new(
     canvas.get_device(),
     canvas.get_surface_config(),
 )));
-
-// The feature will be rendered in canvas.render(...)
-// In order of adding to canvas (like the feature was added first, and it will be rendered first)
 ```
 
 ### Why Features?
