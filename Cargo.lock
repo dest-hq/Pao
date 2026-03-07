@@ -1248,7 +1248,8 @@ checksum = "e8cf8e6a8aa66ce33f63993ffc4ea4271eb5b0530a9002db8455ea6050c77bfa"
 [[package]]
 name = "primit"
 version = "0.1.0"
-source = "git+https://github.com/dest-hq/primit#e8b694a61906dec9ece16be0d3f353cff3fe50b5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a06446e0b64c108547a4ec3b672dcc57ed5f5b9dc1cf43f674b650b88a2d627a"
 
 [[package]]
 name = "proc-macro-crate"

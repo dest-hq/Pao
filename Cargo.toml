@@ -4,6 +4,9 @@ version = "0.1.0"
 description = "Fast GPU-accelerated 2D renderer built on top of wgpu"
 license = "MIT"
 edition = "2024"
+repository = "https://github.com/dest-hq/pao"
+keywords = ["graphics", "rendering", "2d", "gpu"]
+categories = ["graphics", "rendering"]
 
 [workspace]
 members = [
@@ -14,6 +17,6 @@ members = [
 pao = { version = "0.1.0", path = "." }
 
 [dependencies]
-primit = { git = "https://github.com/dest-hq/primit" }
+primit = "0.1"
 raw-window-handle = "0.6.2"
 wgpu = "28.0.0"
