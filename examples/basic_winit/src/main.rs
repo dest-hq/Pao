@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use pao::{Canvas, Options, primit::Color};
+use pao::{Canvas, Options, primit::Color, wgpu::Limits};
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -33,6 +33,7 @@ impl State {
                     power_preference: pao::wgpu::PowerPreference::HighPerformance,
                     hints: pao::wgpu::MemoryHints::MemoryUsage,
                     mode: pao::wgpu::PresentMode::AutoVsync,
+                    limits: Limits::downlevel_webgl2_defaults(),
                 },
             )
             .await

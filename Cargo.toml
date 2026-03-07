@@ -5,6 +5,10 @@ description = "Fast GPU-accelerated 2D renderer built on top of wgpu"
 license = "MIT"
 edition = "2024"
 
+[features]
+default = ["shapes"]
+shapes = ["dep:lyon"]
+
 [workspace]
 members = [
     "examples/*",
@@ -14,6 +18,8 @@ members = [
 pao = { version = "0.1.0", path = "." }
 
 [dependencies]
+bytemuck = "1.25.0"
+lyon = {version = "1.0.16", optional = true}
 primit = { git = "https://github.com/dest-hq/primit" }
 raw-window-handle = "0.6.2"
 wgpu = "28.0.0"

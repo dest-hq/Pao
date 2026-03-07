@@ -7,7 +7,6 @@ use wgpu::{
 
 use crate::{commands::Commands, features::RenderFeature};
 
-// Options
 #[derive(Default)]
 pub struct Options {
     pub width: u32,
@@ -16,6 +15,7 @@ pub struct Options {
     pub power_preference: PowerPreference,
     pub hints: MemoryHints,
     pub mode: PresentMode,
+    pub limits: Limits,
 }
 
 pub struct Canvas {
@@ -23,7 +23,6 @@ pub struct Canvas {
     queue: Queue,
     surface: Surface<'static>,
     config: SurfaceConfiguration,
-
     commands: Vec<Commands>,
 }
 
@@ -56,8 +55,7 @@ impl Canvas {
         // Request device
         let (device, queue) = adapter
             .request_device(&wgpu::DeviceDescriptor {
-                required_limits: Limits::downlevel_webgl2_defaults()
-                    .using_resolution(adapter.limits()),
+                required_limits: options.limits.using_resolution(adapter.limits()),
                 memory_hints: options.hints,
                 ..Default::default()
             })
@@ -89,6 +87,7 @@ impl Canvas {
         })
     }
 
+    #[cfg(feature = "shapes")]
     pub fn draw_rect(&mut self, rect: Rect) {
         self.commands.push(Commands::RectCommand(rect));
     }
