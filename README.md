@@ -13,7 +13,7 @@ Fast GPU-accelerated 2D renderer built on top of wgpu
 - [x] GPU-accelerated rendering with wgpu
 - [x] Extensible feature system
 - [x] Cross-platform
-- [ ] Shape rendering (rectangles, circles) - Coming in v0.1.0
+- [ ] Shape rendering (rectangles, circles) - Coming in v0.2.0
 - [ ] Text rendering support - Coming in v0.2.0
 - [ ] Gradients and advanced effects - Coming in v0.3.0
 
