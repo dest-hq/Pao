@@ -8,13 +8,6 @@ Fast GPU-accelerated 2D renderer built on top of wgpu
 [![Documentation](https://docs.rs/pao/badge.svg)](https://docs.rs/pao)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Why Pao?
-
-Pao is:
-- **Modular** - Extend with custom rendering features
-- **Cross-platform** - Runs anywhere wgpu runs
-- **Simple** - Clean API, easy to integrate
-
 ## Features
 
 - [x] GPU-accelerated rendering with wgpu
@@ -34,7 +27,7 @@ pao = "0.1"
 
 ## The Feature System
 
-The best thing about Pao is its **expandability**. Instead of providing everything built in, Pao lets you add custom rendering features
+Pao doesn't have everything built in, so if you are missing something you can create custom feature
 
 ### Creating a Custom Feature
 ```rust
@@ -62,10 +55,6 @@ canvas.draw_feature(Box::new(TriangleFeature::new(
 )));
 ```
 
-### Why Features?
-
-With features, you can add what you're missing
-
 ## Examples
 
 Check out the [examples](https://github.com/dest-hq/Pao/tree/main/examples/) directory:
@@ -80,12 +69,12 @@ cargo run --release -p <the example>
 
 ## Roadmap
 
-### v0.1.0 - Foundation (Current)
+### v0.1.0
 - [x] Canvas + wgpu setup
 - [x] Feature system
 - [x] Basic examples
 
-### v0.2.0 - Essential Shapes (Next)
+### v0.2.0
 - [ ] Rectangle rendering
 - [ ] Circle rendering
 - [ ] Rounded rectangles
@@ -93,7 +82,7 @@ cargo run --release -p <the example>
 - [ ] Text rendering
 - [ ] Gradients
 
-### v0.3.0 - Advanced (Future)
+### v0.3.0
 - [ ] Images and textures
 - [ ] Clipping and masking
 - [ ] Transforms (rotate, scale, translate)
@@ -101,20 +90,11 @@ cargo run --release -p <the example>
 
 You can find out more here [Roadmap](https://github.com/orgs/dest-hq/projects/3/)
 
-## Performance
-
-Pao aims to be:
-- **Lighter than Vello** - Lower memory usage, especially on Windows
-- **Faster than CPU rendering** - GPU acceleration for all operations
-- **Efficient batching** - Minimize draw calls and state changes
-
-Benchmarks coming in v0.1.0
-
 ## Comparison
 
 | Feature | Pao | Vello | Skia | tiny_pao |
 |---------|-----|-------|------|----------|
-| Backend | GPU (wgpu) | GPU (wgpu) | GPU/CPU | CPU only |
+| Backend | GPU | GPU | GPU/CPU | CPU only |
 | Memory | Medium | High on Windows | Low | Very low |
 | Extensible | Yes | No | No | Yes |
 
