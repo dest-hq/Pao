@@ -1,6 +1,5 @@
 use primit::Color;
-#[cfg(feature = "shapes")]
-use primit::{Circle, Rect, RoundedRect};
+// use primit::{Circle, Rect, RoundedRect};
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use wgpu::{
     Backends, CompositeAlphaMode, Device, Instance, InstanceDescriptor, Limits, MemoryHints,
@@ -136,21 +135,18 @@ impl Canvas {
         })
     }
 
-    #[cfg(feature = "shapes")]
-    pub fn draw_rect(&mut self, rect: Rect) {
-        self.commands.push(Commands::RectCommand(rect));
-    }
+    // pub fn draw_rect(&mut self, rect: Rect) {
+    //     self.commands.push(Commands::RectCommand(rect));
+    // }
 
-    #[cfg(feature = "shapes")]
-    pub fn draw_rounded_rect(&mut self, rounded_rect: RoundedRect) {
-        self.commands
-            .push(Commands::RoundedRectCommand(rounded_rect));
-    }
+    // pub fn draw_rounded_rect(&mut self, rounded_rect: RoundedRect) {
+    //     self.commands
+    //         .push(Commands::RoundedRectCommand(rounded_rect));
+    // }
 
-    #[cfg(feature = "shapes")]
-    pub fn draw_circle(&mut self, circle: Circle) {
-        self.commands.push(Commands::CircleCommand(circle));
-    }
+    // pub fn draw_circle(&mut self, circle: Circle) {
+    //     self.commands.push(Commands::CircleCommand(circle));
+    // }
 
     pub fn get_multisample_count(&self) -> &u32 {
         &self.multisample_count
@@ -270,8 +266,7 @@ impl Canvas {
                     feature.prepare(&self.device, &self.queue);
                     feature.render(&mut renderpass);
                 }
-                #[cfg(feature = "shapes")]
-                _ => {}
+                // _ => {}
             }
         }
 
