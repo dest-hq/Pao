@@ -71,7 +71,7 @@ With features, you can add what you're missing
 Check out the [examples](https://github.com/dest-hq/Pao/tree/main/examples/) directory:
 
 - [basic_winit](https://github.com/dest-hq/Pao/tree/main/examples/basic_winit/) - Simple colored window
-- [triangle](https://github.com/dest-hq/Pao/tree/main/examples/triangle/) - Custom triangle feature with shaders
+- [triangle](https://github.com/dest-hq/Pao/tree/main/examples/triangle/) - Custom triangle feature with shaders and anti-aliasing (MSAA 4X)
 
 Run an example:
 ```bash

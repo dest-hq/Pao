@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use pao::{Canvas, Options, features::RenderFeature, primit::Color, wgpu::Limits};
+use pao::{Canvas, Options, features::RenderFeature, primit::Color};
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -14,7 +14,11 @@ pub struct TriangleFeature {
 }
 
 impl TriangleFeature {
-    pub fn new(device: &pao::wgpu::Device, config: &pao::wgpu::SurfaceConfiguration) -> Self {
+    pub fn new(
+        device: &pao::wgpu::Device,
+        config: &pao::wgpu::SurfaceConfiguration,
+        multisample_count: u32,
+    ) -> Self {
         // load shader
         let shader = device.create_shader_module(pao::wgpu::ShaderModuleDescriptor {
             label: Some("Triangle Shader"),
@@ -51,7 +55,10 @@ impl TriangleFeature {
             }),
             primitive: pao::wgpu::PrimitiveState::default(),
             depth_stencil: None,
-            multisample: pao::wgpu::MultisampleState::default(),
+            multisample: pao::wgpu::MultisampleState {
+                count: multisample_count,
+                ..Default::default()
+            },
             cache: None,
         });
 
@@ -93,7 +100,7 @@ impl State {
                 power_preference: pao::wgpu::PowerPreference::HighPerformance,
                 hints: pao::wgpu::MemoryHints::MemoryUsage,
                 mode: pao::wgpu::PresentMode::AutoVsync,
-                limits: Limits::downlevel_webgl2_defaults(),
+                multisample: pao::Multisample::X4,
             },
         )
         .await
@@ -104,6 +111,7 @@ impl State {
             triangle_feature: Box::new(TriangleFeature::new(
                 canvas.get_device(),
                 &canvas.get_surface_config(),
+                canvas.get_multisample_count().clone(),
             )),
             canvas,
         }
