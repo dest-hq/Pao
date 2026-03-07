@@ -83,11 +83,11 @@ cargo run --release -p <the example>
 ### v0.1.0 - Foundation (Current)
 - [x] Canvas + wgpu setup
 - [x] Feature system
-- [ ] Rectangle rendering
-- [ ] Circle rendering
-- [ ] Basic examples
+- [x] Basic examples
 
 ### v0.2.0 - Essential Shapes (Next)
+- [ ] Rectangle rendering
+- [ ] Circle rendering
 - [ ] Rounded rectangles
 - [ ] Lines and strokes
 - [ ] Text rendering

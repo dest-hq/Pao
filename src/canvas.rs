@@ -9,17 +9,57 @@ use wgpu::{
 
 use crate::{Multisample, commands::Commands, features::RenderFeature};
 
+/// Configuration options for creating a `Canvas`.
+///
+/// # Example
+///
+/// ```
+/// use pao::{Options, Multisample};
+///
+/// let options = Options {
+///     width: 800,
+///     height: 600,
+///     multisample: Multisample::X4,
+///     ..Default::default()
+/// };
+/// ```
 #[derive(Default)]
 pub struct Options {
+    /// Window width in pixels
     pub width: u32,
+
+    /// Window height in pixels
     pub height: u32,
+
+    /// GPU backend preference (Vulkan, Metal, DX12, WebGPU)
     pub backends: Backends,
+
+    /// Power preference for GPU selection
     pub power_preference: PowerPreference,
+
+    /// Memory allocation hints for the GPU
     pub hints: MemoryHints,
+
+    /// Present mode (VSync, Immediate, etc.)
     pub mode: PresentMode,
+
+    /// Multisample anti-aliasing level (1x or 4x)
     pub multisample: Multisample,
 }
 
+/// A GPU-accelerated rendering canvas.
+///
+/// `Canvas` manages the wgpu device, queue, and surface. It provides
+/// methods for rendering custom features and controlling MSAA
+///
+/// # Example
+///
+/// ```no_run
+/// use pao::{Canvas, Options};
+/// # async fn example(window: impl pao::HasWindowHandle) {
+/// let canvas = Canvas::new(window, Options::default()).await.unwrap();
+/// # }
+/// ```
 pub struct Canvas {
     device: Device,
     queue: Queue,
@@ -32,6 +72,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
+    /// Creates a new `Canvas` with specified options
     pub async fn new<T>(window: T, options: Options) -> Result<Self, String>
     where
         T: HasWindowHandle + HasDisplayHandle + Send + Sync + 'static,
@@ -68,6 +109,7 @@ impl Canvas {
             .await
             .map_err(|_| "Can't get device")?;
 
+        // Get capabilites of the surface
         let format = surface.get_capabilities(&adapter).formats[0];
 
         // Configure surface
@@ -82,6 +124,9 @@ impl Canvas {
             desired_maximum_frame_latency: 2,
         };
 
+        surface.configure(&device, &config);
+
+        // Get the supported texture format
         let sample_flags = adapter
             .get_texture_format_features(config.view_formats[0])
             .flags;
@@ -97,6 +142,7 @@ impl Canvas {
         };
 
         let texture = if max_sample_count == 4 {
+            // Creates a MSAA 4x texture
             Some(device.create_texture(&wgpu::TextureDescriptor {
                 size: wgpu::Extent3d {
                     width: config.width,
@@ -120,8 +166,6 @@ impl Canvas {
         } else {
             None
         };
-
-        surface.configure(&device, &config);
 
         Ok(Self {
             device,
@@ -148,28 +192,34 @@ impl Canvas {
     //     self.commands.push(Commands::CircleCommand(circle));
     // }
 
+    /// Returns the current MSAA (1 or 4)
     pub fn get_multisample_count(&self) -> &u32 {
         &self.multisample_count
     }
 
+    /// Returns the reference to wgpu::Device
     pub fn get_device(&self) -> &Device {
         &self.device
     }
 
+    /// Returns the reference to wgpu::SurfaceConfiguration
     pub fn get_surface_config(&self) -> &SurfaceConfiguration {
         &self.config
     }
 
+    /// Returns the reference to wgpu::Queue
     pub fn get_queue(&self) -> &Queue {
         &self.queue
     }
 
+    /// Resize the `Canvas`
     pub fn resize(&mut self, width: u32, height: u32) {
-        // Configure surface
+        // Reconfigure the surface
         self.config.width = width.max(1);
         self.config.height = height.max(1);
         self.surface.configure(&self.device, &self.config);
 
+        // Recreating the MSAA texture with the new size
         self.msaa_texture = if self.multisample_count == 4 {
             Some(self.device.create_texture(&wgpu::TextureDescriptor {
                 size: wgpu::Extent3d {
@@ -196,19 +246,23 @@ impl Canvas {
         };
     }
 
+    /// Adds a custom render feature to the canvas.
     pub fn draw_feature(&mut self, feature: Box<dyn RenderFeature>) {
         self.commands.push(Commands::FeatureCommand(feature));
     }
 
+    /// Renders the current frame with the specified background color
     pub fn render(&mut self, background: Color) {
-        // Create texture view
+        // Get current texture
         let surface_texture = self
             .surface
             .get_current_texture()
             .expect("Failed to acquire next swap chain texture");
 
+        // Create texture view
         let surface_view = surface_texture.texture.create_view(&Default::default());
 
+        // Create encoder
         let mut encoder = self.device.create_command_encoder(&Default::default());
 
         let rpass_descriptor = if let Some(msaa_view) = &self.msaa_view {
@@ -257,16 +311,15 @@ impl Canvas {
             }
         };
 
-        // Create the renderpass which will clear the screen.
         let mut renderpass = encoder.begin_render_pass(rpass_descriptor);
 
         for cmd in &mut self.commands {
             match cmd {
+                // Render the custom features
                 Commands::FeatureCommand(feature) => {
                     feature.prepare(&self.device, &self.queue);
                     feature.render(&mut renderpass);
-                }
-                // _ => {}
+                } // _ => {}
             }
         }
 
@@ -275,7 +328,9 @@ impl Canvas {
 
         // Submit the command in the queue to execute
         self.queue.submit([encoder.finish()]);
+        // Present the texture
         surface_texture.present();
+        // Clear all commands
         self.commands.clear();
     }
 }

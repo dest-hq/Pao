@@ -1,6 +1,9 @@
+/// MSAA level
 #[derive(PartialEq)]
 pub enum Multisample {
+    /// No anti-aliasing
     X1,
+    /// 4X MSAA
     X4,
 }
 
