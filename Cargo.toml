@@ -8,6 +8,15 @@ repository = "https://github.com/dest-hq/pao"
 keywords = ["graphics", "rendering", "2d", "gpu"]
 categories = ["graphics", "rendering"]
 
+[features]
+default = ["vulkan", "metal", "dx12", "gles", "webgpu"]
+vulkan = ["wgpu/vulkan"]
+metal = ["wgpu/metal"]
+dx12 = ["wgpu/dx12"]
+gles = ["wgpu/gles"]
+webgpu = ["wgpu/webgpu"]
+webgl = ["wgpu/webgl"]
+
 [workspace]
 members = [
     "examples/*",
@@ -19,4 +28,4 @@ pao = { version = "0.1.1", path = "." }
 [dependencies]
 primit = "0.1"
 raw-window-handle = "0.6.2"
-wgpu = "28.0.0"
+wgpu = { version = "28.0.0", default-features = false, features = ["wgsl", "std", "parking_lot"] }
