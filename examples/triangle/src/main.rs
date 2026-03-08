@@ -67,8 +67,6 @@ impl TriangleFeature {
 }
 
 impl RenderFeature for TriangleFeature {
-    fn prepare(&mut self, _device: &pao::wgpu::Device, _queue: &pao::wgpu::Queue) {}
-
     fn render(
         &mut self,
         pass: &mut pao::wgpu::RenderPass,
