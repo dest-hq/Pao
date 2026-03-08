@@ -2,8 +2,7 @@
 
 use crate::features::RenderFeature;
 
-#[allow(unused)]
-
+/// Render commands that will be executed by the [`Canvas`]
 pub enum Commands {
     // RectCommand(Rect),
     // CircleCommand(Circle),

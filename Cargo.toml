@@ -1,6 +1,6 @@
 [package]
 name = "pao"
-version = "0.1.0"
+version = "0.1.1"
 description = "Fast GPU-accelerated 2D renderer built on top of wgpu"
 license = "MIT"
 edition = "2024"
@@ -14,7 +14,7 @@ members = [
 ]
 
 [workspace.dependencies]
-pao = { version = "0.1.0", path = "." }
+pao = { version = "0.1.1", path = "." }
 
 [dependencies]
 primit = "0.1"

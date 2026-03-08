@@ -22,7 +22,7 @@ Fast GPU-accelerated 2D renderer built on top of wgpu
 Add to your `Cargo.toml`:
 ```toml
 [dependencies]
-pao = "0.1"
+pao = "0.1.1"
 ```
 
 ## The Feature System

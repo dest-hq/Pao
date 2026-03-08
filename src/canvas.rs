@@ -9,20 +9,7 @@ use wgpu::{
 
 use crate::{Multisample, commands::Commands, features::RenderFeature};
 
-/// Configuration options for creating a `Canvas`.
-///
-/// # Example
-///
-/// ```
-/// use pao::{Options, Multisample};
-///
-/// let options = Options {
-///     width: 800,
-///     height: 600,
-///     multisample: Multisample::X4,
-///     ..Default::default()
-/// };
-/// ```
+/// Configuration options for creating a [`Canvas`]
 #[derive(Default)]
 pub struct Options {
     /// Window width in pixels
@@ -47,19 +34,7 @@ pub struct Options {
     pub multisample: Multisample,
 }
 
-/// A GPU-accelerated rendering canvas.
-///
-/// `Canvas` manages the wgpu device, queue, and surface. It provides
-/// methods for rendering custom features and controlling MSAA
-///
-/// # Example
-///
-/// ```no_run
-/// use pao::{Canvas, Options};
-/// # async fn example(window: impl pao::HasWindowHandle) {
-/// let canvas = Canvas::new(window, Options::default()).await.unwrap();
-/// # }
-/// ```
+/// A GPU-accelerated rendering canvas
 pub struct Canvas {
     device: Device,
     queue: Queue,
@@ -72,7 +47,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    /// Creates a new `Canvas` with specified options
+    /// Creates a new [`Canvas`] with specified options
     pub async fn new<T>(window: T, options: Options) -> Result<Self, String>
     where
         T: HasWindowHandle + HasDisplayHandle + Send + Sync + 'static,
@@ -212,7 +187,7 @@ impl Canvas {
         &self.queue
     }
 
-    /// Resize the `Canvas`
+    /// Resize the [`Canvas`]
     pub fn resize(&mut self, width: u32, height: u32) {
         // Reconfigure the surface
         self.config.width = width.max(1);
@@ -246,7 +221,7 @@ impl Canvas {
         };
     }
 
-    /// Adds a custom render feature to the canvas.
+    /// Adds a custom render feature to the [`Canvas`]
     pub fn draw_feature(&mut self, feature: Box<dyn RenderFeature>) {
         self.commands.push(Commands::FeatureCommand(feature));
     }
