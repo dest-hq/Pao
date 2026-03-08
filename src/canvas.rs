@@ -293,7 +293,7 @@ impl Canvas {
                 // Render the custom features
                 Commands::FeatureCommand(feature) => {
                     feature.prepare(&self.device, &self.queue);
-                    feature.render(&mut renderpass);
+                    feature.render(&mut renderpass, &self.device, &self.queue);
                 } // _ => {}
             }
         }

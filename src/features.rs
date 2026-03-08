@@ -6,5 +6,5 @@ pub trait RenderFeature {
     fn prepare(&mut self, device: &wgpu::Device, queue: &wgpu::Queue);
 
     /// Called during the render pass
-    fn render(&mut self, pass: &mut wgpu::RenderPass);
+    fn render(&mut self, pass: &mut wgpu::RenderPass, device: &wgpu::Device, queue: &wgpu::Queue);
 }
