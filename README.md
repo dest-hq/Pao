@@ -38,11 +38,7 @@ pub struct TriangleFeature {
 }
 
 impl RenderFeature for TriangleFeature {
-    fn prepare(&mut self, device: &pao::wgpu::Device, queue: &pao::wgpu::Queue) {
-    
-    }
-    
-    fn render(&mut self, pass: &mut pao::wgpu::RenderPass) {
+    fn render(&mut self, pass: &mut pao::wgpu::RenderPass, device: &pao::wgpu::Device, queue: &pao::wgpu::Queue) {
         pass.set_pipeline(&self.pipeline);
         pass.draw(0..3, 0..1);
     }
