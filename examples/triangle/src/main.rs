@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{cell::RefCell, rc::Rc, sync::Arc};
 
 use pao::{Canvas, Options, features::RenderFeature, primit::Color};
 use winit::{
@@ -86,7 +86,7 @@ fn main() {
 
 struct State {
     window: Arc<Window>,
-    triangle_feature: Box<TriangleFeature>,
+    triangle_feature: Rc<RefCell<TriangleFeature>>,
     canvas: Canvas,
 }
 
@@ -111,11 +111,11 @@ impl State {
 
         State {
             window: window,
-            triangle_feature: Box::new(TriangleFeature::new(
+            triangle_feature: Rc::new(RefCell::new(TriangleFeature::new(
                 canvas.get_device(),
                 &canvas.get_surface_config(),
                 canvas.get_multisample_count().clone(),
-            )),
+            ))),
             canvas,
         }
     }

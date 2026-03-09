@@ -1,3 +1,5 @@
+use std::{cell::RefCell, rc::Rc};
+
 use primit::Color;
 // use primit::{Circle, Rect, RoundedRect};
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
@@ -222,7 +224,7 @@ impl Canvas {
     }
 
     /// Adds a custom render feature to the [`Canvas`]
-    pub fn draw_feature(&mut self, feature: Box<dyn RenderFeature>) {
+    pub fn draw_feature(&mut self, feature: Rc<RefCell<dyn RenderFeature>>) {
         self.commands.push(Commands::FeatureCommand(feature));
     }
 
@@ -292,7 +294,8 @@ impl Canvas {
             match cmd {
                 // Render the custom features
                 Commands::FeatureCommand(feature) => {
-                    feature.render(&mut renderpass, &self.device, &self.queue);
+                    let mut feature_mut = feature.borrow_mut();
+                    feature_mut.render(&mut renderpass, &self.device, &self.queue);
                 } // _ => {}
             }
         }
