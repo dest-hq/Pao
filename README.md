@@ -22,12 +22,12 @@ Fast GPU-accelerated 2D renderer built on top of wgpu
 Add to your `Cargo.toml`:
 ```toml
 [dependencies]
-pao = "0.1.1"
+pao = "0.1.2"
 ```
 
 ## The Feature System
 
-Pao doesn't have everything built in, so if you are missing something you can create custom feature
+Pao doesn't have everything built in, so if you are missing something, you can create a custom feature
 
 ### Creating a Custom Feature
 ```rust
@@ -45,10 +45,10 @@ impl RenderFeature for TriangleFeature {
 }
 
 // Use it:
-canvas.draw_feature(Box::new(TriangleFeature::new(
+canvas.draw_feature(Rc::new(RefCell::new(TriangleFeature::new(
     canvas.get_device(),
     canvas.get_surface_config(),
-)));
+))));
 ```
 
 ## Examples
@@ -75,7 +75,7 @@ cargo run --release -p <the example>
 - [ ] Circle rendering
 - [ ] Rounded rectangles
 - [ ] Lines and strokes
-- [ ] Text rendering
+- [x] Text rendering
 - [ ] Gradients
 
 ### v0.3.0
