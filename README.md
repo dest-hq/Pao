@@ -14,7 +14,7 @@ Fast GPU-accelerated 2D renderer built on top of wgpu
 - [x] Extensible feature system
 - [x] Cross-platform
 - [ ] Shape rendering (rectangles, circles) - Coming in v0.2.0
-- [ ] Text rendering support - Coming in v0.2.0
+- [x] Text rendering support via [pao-text](https://github.com/mxghj/pao-text/tree/main)
 - [ ] Gradients and advanced effects - Coming in v0.3.0
 
 ## Installation
