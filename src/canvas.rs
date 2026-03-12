@@ -1,7 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
 use primit::Color;
-// use primit::{Circle, Rect, RoundedRect};
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use wgpu::{
     Backends, CompositeAlphaMode, Device, Instance, InstanceDescriptor, Limits, MemoryHints,
@@ -154,22 +153,14 @@ impl Canvas {
         })
     }
 
-    // pub fn draw_rect(&mut self, rect: Rect) {
-    //     self.commands.push(Commands::RectCommand(rect));
-    // }
-
-    // pub fn draw_rounded_rect(&mut self, rounded_rect: RoundedRect) {
-    //     self.commands
-    //         .push(Commands::RoundedRectCommand(rounded_rect));
-    // }
-
-    // pub fn draw_circle(&mut self, circle: Circle) {
-    //     self.commands.push(Commands::CircleCommand(circle));
-    // }
-
     /// Returns the current MSAA (1 or 4)
     pub fn get_multisample_count(&self) -> &u32 {
         &self.multisample_count
+    }
+
+    /// Clear the [`Canvas`]
+    pub fn clear(&mut self) {
+        self.commands.clear();
     }
 
     /// Returns the reference to wgpu::Device
@@ -305,7 +296,5 @@ impl Canvas {
         self.queue.submit([encoder.finish()]);
         // Present the texture
         surface_texture.present();
-        // Clear all commands
-        self.commands.clear();
     }
 }
