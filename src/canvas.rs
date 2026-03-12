@@ -5,7 +5,7 @@ use primit::Color;
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 use wgpu::{
     Backends, CompositeAlphaMode, Device, Instance, InstanceDescriptor, Limits, MemoryHints,
-    PowerPreference, PresentMode, Queue, Surface, SurfaceConfiguration, Texture, TextureFormat,
+    PowerPreference, PresentMode, Queue, Surface, SurfaceConfiguration, Texture,
     TextureFormatFeatureFlags, TextureUsages, TextureView,
 };
 
@@ -97,16 +97,14 @@ impl Canvas {
             height: options.height.max(1),
             present_mode: options.mode,
             alpha_mode: CompositeAlphaMode::Auto,
-            view_formats: vec![TextureFormat::Rgba8UnormSrgb],
+            view_formats: vec![],
             desired_maximum_frame_latency: 2,
         };
 
         surface.configure(&device, &config);
 
         // Get the supported texture format
-        let sample_flags = adapter
-            .get_texture_format_features(config.view_formats[0])
-            .flags;
+        let sample_flags = adapter.get_texture_format_features(config.format).flags;
 
         let max_sample_count = {
             if options.multisample == Multisample::X4
@@ -129,7 +127,7 @@ impl Canvas {
                 mip_level_count: 1,
                 sample_count: 4,
                 dimension: wgpu::TextureDimension::D2,
-                format: config.view_formats[0],
+                format: config.format,
                 usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::TRANSIENT,
                 label: None,
                 view_formats: &[],
@@ -207,7 +205,7 @@ impl Canvas {
                 mip_level_count: 1,
                 sample_count: 4,
                 dimension: wgpu::TextureDimension::D2,
-                format: self.config.view_formats[0],
+                format: self.config.format,
                 usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::TRANSIENT,
                 label: None,
                 view_formats: &[],
