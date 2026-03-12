@@ -46,6 +46,8 @@ impl State {
     }
 
     fn render(&mut self) {
+        self.canvas.clear();
+
         self.window.pre_present_notify();
         self.canvas.render(Color::rgb8(0, 255, 0));
     }

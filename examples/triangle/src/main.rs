@@ -125,6 +125,8 @@ impl State {
     }
 
     fn render(&mut self) {
+        self.canvas.clear();
+
         self.window.pre_present_notify();
         self.canvas.draw_feature(self.triangle_feature.clone());
         self.canvas.render(Color::rgb8(0, 255, 0));
